@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 36px;
+            color: #2c3e50;
+            transition: color 0.3s ease;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        li:hover {
+            background-color: #ecf0f1;
+        }
+
+        label {
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 18px; /* Adjusted font size for labels */
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .selected {
+            background-color: #bdc3c7; /* Darker background for selected items */
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #exportedPages {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+    <title>Dashboard Selection</title>
+</head>
+<body>
+    <h1>Select Pages from Dashboards to print :)</h1>
+    <ul id="dashboardList">
+        <script>
+            const names = [
+                "Area Manager Cover",
+                "Commissioning",
+                "Completions",
+                "Cost",
+                "Craft Hours and Cost Dashboard",
+                "Engineering",
+                "Human Resources",
+                "Indirect Craft Dashboard",
+                "Instruments",
+                "LPI",
+                "Procurement",
+                "Quality",
+                "Risk",
+                "Safety",
+                "Schedule",
+                "Spalling"
+            ];
+
+            const visuals = Visuals = [
+                ["Cover", "Agenda"],
+                ["Skyline Horizontal", "Page 1", "19W-01", "32W-01", "90W-01"],
+                [
+                    "Completions Checklist", "Roof Tracker", "Blockout Tracker", "Blockout Progress and Schedule", "Spalling Tracker", "Spalling Progress and Schedule", 
+                    "Core Drilling Tracker", "Sounding Tracker", "Grouting Tracker", "Sector 1", "Sector 2", "Sector 3", "Sector 4", "Sector 5", "Sector 6", "Sector 7",
+                    "Sector 8", "Sector 9", "Sector 10", "Sector 11", "Sector 12", "Sector 13", "Sector 14", "Sector 15", "Sector 16", "Sector 17", "Sector 18", "Sector 19",
+                    "Sector 20", "Sector 21", "Sector 22", "Sector 23", "Sector 24", "Tool Tip - Precast", "Tool Tip - Blockout", "Tool Tip - Coring", "Tool Tip - Grouting", "Page 1"
+                ],
+                ["Cost Parking Lot", "Cost Initiatives", "Actual Cost Details", "Page 1"],
+                ["Weekly MF Check Report", "Cost Code Book", "Cost Code Check", "Slip Actuals", "Spalling Actuals"],
+                ["Engineering - Parking Lot", "Permanent", "Temp Works"],
+                ["HR Dashboard", "Staff Recruitment", "Page 1", "HR Dashboard - Craft", "2022-2024 Headcount", "2024 Headcount"],
+                ["Weekly Report_Forecast", "Total Performance_CA3, Viewer", "Indirect Summary_Baseline", "Manager Summary_Forecast", "Manager Summary_Budget", "Weekly Report", "MEICA + Electrical", "Troubleshooting"],
+                ["Instruments by CGS Elevation", "Instruments by Cell  Location", "Tool Tip 1 - Instruments", "Tool Tip 2 - Instruments", "Page 1"],
+                [
+                    "LPI - Direct Scopes", "LPI - Indirect Scopes", "Blockout Tracker", "Precast Tracker", "Top of Shaft Tracker", "J-Tubes Tracker", "Decks Tracker", "LPI - Parking Lot", "Area Managers - LPI",
+                    "Tool Tip - Precast", "Tool Tip - Blockout", "Tool Tip - Spalling", "Area Managers - Baseline LPI", "Area Managers - Forecast LPI", "Discipline - Forecast LPI", "Activity Completed Previous Week"
+                ],
+                ["Procurement - Parking Lot", "Procurement", "Expediting Report"],
+                ["Quality Dashboard", "Area Managers Weekly Report", "Quality - Parking Lot", "Area Managers Bi-Weekly Report"],
+                ["Scorecard", "Risk - Parking Lot", "Risk", "ACTIONS"],
+                ["Safety Parking Lot", "Safety", "HAZID Report"],
+                ["Schedule - Parking Lot", "SDP Milestone Table", "Area Manager Milestone Table", "Histogram", "Headcount", "Absentee Report"],
+                ["Earned Value", "Spalling Tracker", "Tool Tip - Spalling"],
+            ];
+
+            const dashboardList = document.getElementById('dashboardList');
+
+            for (let i = 0; i < names.length; i++) {
+                const dashboard = document.createElement('li');
+                dashboard.innerHTML = `
+                    <input type="checkbox" id="dashboard${i}" class="dashboard" onclick="togglePages(${i})">
+                    <label for="dashboard${i}">${names[i]}</label>
+                    <ul id="pages${i}">
+                        ${visuals[i].map(page => `<li><input type="checkbox" class="page" value="${page}" onclick="handlePageClick(${i})">${page}</li>`).join('')}
+                    </ul>
+                `;
+                dashboardList.appendChild(dashboard);
+            }
+
+            function togglePages(dashboardIndex) {
+                const pages = document.querySelectorAll(`#pages${dashboardIndex} .page`);
+                const dashboardCheckbox = document.getElementById(`dashboard${dashboardIndex}`);
+
+                pages.forEach(page => {
+                    page.checked = dashboardCheckbox.checked;
+                });
+            }
+
+            function handlePageClick(dashboardIndex) {
+                const pages = document.querySelectorAll(`#pages${dashboardIndex} .page`);
+                const dashboardCheckbox = document.getElementById(`dashboard${dashboardIndex}`);
+
+                let allPagesSelected = true;
+
+                pages.forEach(page => {
+                    if (!page.checked) {
+                        allPagesSelected = false;
+                    }
+                });
+
+                dashboardCheckbox.checked = allPagesSelected;
+            }
+        </script>
+    </ul>
+
+    <button onclick="exportSelectedPages()">Export</button>
+    <button onclick="goToSendEmailPage()">Send Email</button>
+
+    <div id="exportedPages">
+        <!-- Display selected pages here -->
+    </div>
+
+    <script>
+        function exportSelectedPages() {
+            const selectedPages = [];
+            const pageCheckboxes = document.querySelectorAll('.page:checked');
+
+            pageCheckboxes.forEach(pageCheckbox => {
+                selectedPages.push(pageCheckbox.value);
+            });
+
+            fetch('/export', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    selected_pages: selectedPages
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error('Error exporting PDFs:', error);
+            });
+
+            const exportedPagesElement = document.getElementById('exportedPages');
+            exportedPagesElement.innerHTML = `<p>Selected Pages: ${selectedPages.join(', ')}</p>`;
+        }
+
+        function startFlaskApp() {
+            fetch('/start_app', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error('Error starting Flask app:', error);
+            });
+        }
+
+        function goToSendEmailPage() {
+            const filePath = 'file:///C:/Users/waleed.sherwani/Desktop/Export%20PDFs%20Directory/static/sendEmail.html';
+            window.location.href = filePath;
+        }
+    </script>
+</body>
+</html>
